@@ -1,6 +1,7 @@
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiTrash } from "react-icons/fi";
+import { usePostUserMutation } from "../../features/job/jobApi";
 
 const AddJob = () => {
   const { handleSubmit, register, control } = useForm();
@@ -20,7 +21,9 @@ const AddJob = () => {
     remove: reqRemove,
   } = useFieldArray({ control, name: "requirements" });
 
+  const [postUser, { isError, isLoading, isSuccess, data }] = usePostUserMutation();
   const onSubmit = (data) => {
+    postUser({ ...data, queries: [], applicants: [] });
     console.log(data);
   };
 
@@ -30,9 +33,7 @@ const AddJob = () => {
         className='bg-secondary/20 shadow-lg p-10 rounded-2xl flex flex-wrap gap-3 max-w-3xl justify-between'
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className='w-full text-2xl text-primary mb-5'>
-          Add a new position
-        </h1>
+        <h1 className='w-full text-2xl text-primary mb-5'>Add a new position</h1>
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='position'>
             Position
@@ -43,13 +44,7 @@ const AddJob = () => {
           <label className='mb-2' htmlFor='companyName'>
             Company Name
           </label>
-          <input
-            disabled
-            className='cursor-not-allowed'
-            type='text'
-            id='companyName'
-            {...register("companyName")}
-          />
+          <input type='text' id='companyName' {...register("companyName")} />
         </div>
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='experience'>
@@ -67,11 +62,7 @@ const AddJob = () => {
           <label className='mb-2' htmlFor='employmentType'>
             Employment Type
           </label>
-          <input
-            type='text'
-            id='employmentType'
-            {...register("employmentType")}
-          />
+          <input type='text' id='employmentType' {...register("employmentType")} />
         </div>
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='salaryRange'>
@@ -99,31 +90,20 @@ const AddJob = () => {
               {skillFields.map((item, index) => {
                 return (
                   <div key={item.key} className='flex items-center gap-3 mb-5'>
-                    <input
-                      className='!w-full'
-                      type='text'
-                      {...register(`skills[${index}]`)}
-                    />
+                    <input className='!w-full' type='text' {...register(`skills[${index}]`)} />
                     <button
                       type='button'
                       onClick={() => skillRemove(index)}
                       className='grid place-items-center rounded-full flex-shrink-0 bg-red-500/20 border border-red-500 h-11 w-11 group transition-all hover:bg-red-500'
                     >
-                      <FiTrash
-                        className='text-red-500 group-hover:text-white transition-all'
-                        size='20'
-                      />
+                      <FiTrash className='text-red-500 group-hover:text-white transition-all' size='20' />
                     </button>
                   </div>
                 );
               })}
             </div>
             <div>
-              <button
-                type='button'
-                onClick={() => skillAppend("")}
-                className='btn'
-              >
+              <button type='button' onClick={() => skillAppend("")} className='btn'>
                 Add Skill
               </button>
             </div>
@@ -136,31 +116,20 @@ const AddJob = () => {
               {resFields.map((item, index) => {
                 return (
                   <div key={item.key} className=' mb-5 flex items-center gap-3'>
-                    <input
-                      className='!w-full'
-                      type='text'
-                      {...register(`responsibilities[${index}]`)}
-                    />
+                    <input className='!w-full' type='text' {...register(`responsibilities[${index}]`)} />
                     <button
                       type='button'
                       onClick={() => resRemove(index)}
                       className='grid place-items-center rounded-full flex-shrink-0 bg-red-500/20 border border-red-500 h-11 w-11 group transition-all hover:bg-red-500'
                     >
-                      <FiTrash
-                        className='text-red-500 group-hover:text-white transition-all'
-                        size='20'
-                      />
+                      <FiTrash className='text-red-500 group-hover:text-white transition-all' size='20' />
                     </button>
                   </div>
                 );
               })}
             </div>
             <div>
-              <button
-                type='button'
-                onClick={() => resAppend("")}
-                className='btn'
-              >
+              <button type='button' onClick={() => resAppend("")} className='btn'>
                 Add Responsibility
               </button>
             </div>
@@ -173,31 +142,20 @@ const AddJob = () => {
               {reqFields.map((item, index) => {
                 return (
                   <div key={item.key} className=' mb-5 flex items-center gap-3'>
-                    <input
-                      className='!w-full'
-                      type='text'
-                      {...register(`requirements[${index}]`)}
-                    />
+                    <input className='!w-full' type='text' {...register(`requirements[${index}]`)} />
                     <button
                       type='button'
                       onClick={() => reqRemove(index)}
                       className='grid place-items-center rounded-full flex-shrink-0 bg-red-500/20 border border-red-500 h-11 w-11 group transition-all hover:bg-red-500'
                     >
-                      <FiTrash
-                        className='text-red-500 group-hover:text-white transition-all'
-                        size='20'
-                      />
+                      <FiTrash className='text-red-500 group-hover:text-white transition-all' size='20' />
                     </button>
                   </div>
                 );
               })}
             </div>
             <div>
-              <button
-                type='button'
-                onClick={() => reqAppend("")}
-                className='btn'
-              >
+              <button type='button' onClick={() => reqAppend("")} className='btn'>
                 Add Requirement
               </button>
             </div>

@@ -2,12 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { useRegisterMutation } from "../../features/auth/authApi";
 
 const CandidateRegistration = () => {
   const [countries, setCountries] = useState([]);
-  const { handleSubmit, register, control } = useForm();
+  const {
+    user: { email },
+  } = useSelector((state) => state.auth);
+  const { handleSubmit, register, control } = useForm({
+    defaultValues: {
+      email: email,
+    },
+  });
+
+  const [postUser, { isLoading, isError }] = useRegisterMutation();
   const term = useWatch({ control, name: "term" });
-  console.log(term);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,15 +28,12 @@ const CandidateRegistration = () => {
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data);
+    postUser({ ...data, role: "candidate" });
   };
 
   return (
     <div className='pt-14'>
-      <div
-        onClick={() => navigate("/register")}
-        className='cursor-pointer w-fit mt-5 flex items-center'
-      >
+      <div onClick={() => navigate("/register")} className='cursor-pointer w-fit mt-5 flex items-center'>
         <FaChevronLeft />
         <p>back</p>
       </div>
@@ -57,34 +65,19 @@ const CandidateRegistration = () => {
             <h1 className='mb-3'>Gender</h1>
             <div className='flex gap-3'>
               <div>
-                <input
-                  type='radio'
-                  id='male'
-                  {...register("gender")}
-                  value='male'
-                />
+                <input type='radio' id='male' {...register("gender")} value='male' />
                 <label className='ml-2 text-lg' for='male'>
                   Male
                 </label>
               </div>
               <div>
-                <input
-                  type='radio'
-                  id='female'
-                  {...register("gender")}
-                  value='female'
-                />
+                <input type='radio' id='female' {...register("gender")} value='female' />
                 <label className='ml-2 text-lg' for='female'>
                   Female
                 </label>
               </div>
               <div>
-                <input
-                  type='radio'
-                  id='other'
-                  {...register("gender")}
-                  value='other'
-                />
+                <input type='radio' id='other' {...register("gender")} value='other' />
                 <label className='ml-2 text-lg' for='other'>
                   Other
                 </label>
@@ -125,12 +118,7 @@ const CandidateRegistration = () => {
 
           <div className='flex justify-between items-center w-full mt-3'>
             <div className='flex  w-full max-w-xs'>
-              <input
-                className='mr-3'
-                type='checkbox'
-                {...register("term")}
-                id='terms'
-              />
+              <input className='mr-3' type='checkbox' {...register("term")} id='terms' />
               <label for='terms'>I agree to terms and conditions</label>
             </div>
             <button disabled={!term} className='btn' type='submit'>
